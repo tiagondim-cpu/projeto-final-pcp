@@ -1,9 +1,12 @@
 # Planejamento Agregado da Produção sob Demanda Sazonal e Incerta: uma Decisão Integrada de Produção, Força de Trabalho e Estoque
 
-**Disciplina:** Planejamento e Controle da Produção (EPR/FT/UnB)
+**Universidade de Brasília — Faculdade de Tecnologia — Departamento de Engenharia de Produção**
+**Disciplina:** Planejamento e Controle da Produção Aplicado
 **Professor:** João Gabriel de Moraes Souza
-**Autor:** _(preencher)_
+**Autor:** Tiago André Gondim — Matrícula 231013476
 **Repositório e notebook (código completo, não anexado a este PDF):** https://github.com/tiagondim-cpu/projeto-final-pcp
+
+Brasília, 2026
 
 ---
 
@@ -228,3 +231,13 @@ Os principais **trade-offs** avaliados são: custo total × nível de serviço (
 Transformei um problema de PCP em uma decisão fundamentada em evidência quantitativa. Partindo de uma previsão de demanda validada (SARIMA, MAPE 5,4%), formulei e resolvi o planejamento agregado por programação linear, comparei estratégias, extraí preços-sombra, tracei a fronteira custo × serviço e testei a robustez por simulação. O plano misto com estoque de segurança de 95% é a política recomendada: minimiza o custo total relevante (R\$ 4,92 milhões), domina as estratégias puras e mantém o nível de serviço sob incerteza a um custo marginal pequeno.
 
 A principal implicação para o PCP é que o valor do planejamento agregado não está em nenhum instrumento isolado — estoque, força de trabalho ou hora extra —, mas em **coordená-los** ao longo do tempo em função da sazonalidade e da incerteza. Como possíveis extensões, destaco a integração com MPS/MRP, a modelagem de lead time estocástico e a otimização robusta, que aprofundariam a decisão sem alterar sua estrutura central.
+
+---
+
+## Referências
+
+CHOPRA, S.; MEINDL, P. *Supply Chain Management: Strategy, Planning, and Operation*. Pearson Education. (fundamentos de estoque e nível de serviço.)
+
+HOPP, W. J.; SPEARMAN, M. L. *Factory Physics*. Waveland Press. (dinâmica de sistemas produtivos, variabilidade, Lei de Little.)
+
+NAHMIAS, S.; OLSEN, T. L. *Production and Operations Analysis*. Waveland Press. (planejamento agregado, previsão de demanda e gestão de estoques.)

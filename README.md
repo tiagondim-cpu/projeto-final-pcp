@@ -3,6 +3,8 @@
 Projeto individual da disciplina Planejamento e Controle da Produção (EPR/FT/UnB),
 Prof. João Gabriel de Moraes Souza.
 
+**Autor:** Tiago André Gondim — Matrícula 231013476
+
 ## Tema
 
 **Eixo central:** Planejamento Agregado da Produção resolvido por Programação Linear (horizonte de 12 meses).
