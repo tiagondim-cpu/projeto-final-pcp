@@ -81,3 +81,27 @@ def demanda_simulada(rng: np.random.Generator) -> np.ndarray:
     base = demanda_esperada()
     eps = rng.normal(0.0, DEMANDA["ruido_cv"], size=base.shape)
     return base * (1.0 + eps)
+
+
+def serie_historica(anos_hist: int = 5, rng: "np.random.Generator | None" = None) -> np.ndarray:
+    """Série mensal OBSERVADA dos `anos_hist` anos anteriores ao ano de planejamento.
+
+    Consistente com `demanda_esperada()` (o forecast adotado para o ano de
+    planejamento) e com a tendência anual: cada ano histórico é a demanda esperada
+    escalada por (1 + tendência)^(deslocamento em anos), com ruído multiplicativo
+    Normal(0, ruido_cv^2). Serve de histórico para ajustar e comparar modelos de
+    previsão (Fase 2). Retorna array de comprimento anos_hist*12, do mês mais antigo
+    ao mais recente (o mês seguinte ao último é o mês 1 do ano de planejamento).
+    """
+    if rng is None:
+        rng = np.random.default_rng(42)
+    E = demanda_esperada()
+    g = 1.0 + DEMANDA["tendencia_ano"]
+    cv = DEMANDA["ruido_cv"]
+    blocos = []
+    for y in range(1, anos_hist + 1):
+        mult = g ** (y - (anos_hist + 1))   # anos anteriores: fator < 1
+        esperado = E * mult
+        observado = esperado * (1.0 + rng.normal(0.0, cv, size=E.shape))
+        blocos.append(observado)
+    return np.concatenate(blocos)
