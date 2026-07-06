@@ -130,7 +130,11 @@ As três estratégias canônicas são o mesmo PL com restrições adicionais: **
 
 O projeto é implementado em Python 3.13, com `numpy`/`pandas` (dados), `statsmodels` e `scikit-learn` (previsão), `PuLP` com o solver CBC (programação linear), `matplotlib` (gráficos) e `scipy` (distribuições). A organização separa responsabilidades: os parâmetros do caso ficam em um único módulo (`src/parametros.py`), o modelo de PL em `src/modelo.py` (fonte única, reutilizada pelo notebook e pelas verificações), e o notebook `notebooks/projeto_pcp.ipynb` conduz a análise ponta a ponta.
 
-A **reprodutibilidade** é assegurada por: semente global única, dependências com versões fixadas (`requirements.txt`), dados gerados salvos em disco e notebook exportado em HTML. Antes de construir a análise, verifiquei que o caso é **não-trivial** por um script independente (`src/valida_premissas.py`): resolvendo os três planos como PLs, confirmei que o plano misto vence as estratégias puras e que a capacidade é efetivamente estressada pela sazonalidade — evitando o risco de calibrar um problema em que uma estratégia simples já fosse ótima. Em conformidade com o enunciado, o código não é colado neste PDF; está no repositório público e no notebook (que o GitHub renderiza com os resultados).
+A **reprodutibilidade** é assegurada por: semente global única, dependências com versões fixadas (`requirements.txt`), dados gerados salvos em disco e notebook exportado em HTML. Antes de construir a análise, verifiquei que o caso é **não-trivial** por um script independente (`src/valida_premissas.py`): resolvendo os três planos como PLs, confirmei que o plano misto vence as estratégias puras e que a capacidade é efetivamente estressada pela sazonalidade — evitando o risco de calibrar um problema em que uma estratégia simples já fosse ótima. Em conformidade com o enunciado, o código não é colado neste PDF; está no repositório público e no notebook (que o GitHub renderiza com os resultados). Os artefatos públicos e funcionais são:
+
+- **Repositório (código completo):** https://github.com/tiagondim-cpu/projeto-final-pcp
+- **Notebook executado (HTML):** https://tiagondim-cpu.github.io/projeto-final-pcp/reports/projeto_pcp.html
+- **Dashboard interativo:** https://projeto-final-pcp-yabzy3maf2syfts8riegnk.streamlit.app/
 
 ---
 

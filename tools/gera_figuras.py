@@ -26,10 +26,12 @@ from parametros import (demanda_esperada, serie_historica, CUSTOS, CAPACIDADE,
                         HORIZONTE_MESES, NIVEL_SERVICO_ALVO, Z_NIVEL_SERVICO)
 from config import get_rng
 from modelo import resolve_pap
+from estilo import aplicar_estilo, C_REGULAR, C_EXTRA, C_ESTOQUE, C_DESTAQUE, C_REF
 
 FIG = ROOT / "reports" / "figuras"
 FIG.mkdir(parents=True, exist_ok=True)
-plt.rcParams.update({"figure.dpi": 120, "axes.grid": True, "font.size": 10})
+aplicar_estilo()
+plt.rcParams.update({"figure.dpi": 120, "font.size": 10})
 
 meses = np.arange(1, HORIZONTE_MESES + 1)
 D = demanda_esperada()
@@ -50,7 +52,7 @@ cap_reg = CAPACIDADE["produtividade_por_trab_mes"] * CAPACIDADE["trabalhadores_i
 fig, ax = plt.subplots(figsize=(8, 4))
 ax.plot(meses, D, "o-", label="Esperada (forecast adotado)")
 ax.plot(meses, D_sim, "s--", alpha=0.8, label="Simulada (ruido 8%)")
-ax.axhline(cap_reg, color="r", ls=":", label=f"Cap. regular inicial ({cap_reg:.0f})")
+ax.axhline(cap_reg, color=C_REF, ls=":", label=f"Cap. regular inicial ({cap_reg:.0f})")
 ax.set(xlabel="Mes", ylabel="Demanda (un)", title="Demanda mensal do ano de planejamento")
 ax.legend(fontsize=8)
 salvar(fig, "fig01_demanda.png")
@@ -92,11 +94,11 @@ salvar(fig, "fig02_backtest.png")
 res = resolve_pap(D, "misto")
 P = np.array(res.plano["P"]); O = np.array(res.plano["O"]); I = np.array(res.plano["I"])
 fig, ax1 = plt.subplots(figsize=(8, 4))
-ax1.bar(meses, P, color="#4C78A8", label="Producao regular")
-ax1.bar(meses, O, bottom=P, color="#F58518", label="Hora extra")
+ax1.bar(meses, P, color=C_REGULAR, label="Producao regular")
+ax1.bar(meses, O, bottom=P, color=C_EXTRA, label="Hora extra")
 ax1.plot(meses, D, "k-o", label="Demanda")
 ax1.set(xlabel="Mes", ylabel="Unidades", title="Plano agregado misto: producao vs demanda")
-ax2 = ax1.twinx(); ax2.plot(meses, I, "g--^", alpha=0.7, label="Estoque"); ax2.set_ylabel("Estoque (un)")
+ax2 = ax1.twinx(); ax2.plot(meses, I, "--^", color=C_ESTOQUE, alpha=0.85, label="Estoque"); ax2.set_ylabel("Estoque (un)")
 h1, l1 = ax1.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
 ax1.legend(h1 + h2, l1 + l2, loc="upper left", fontsize=8)
 salvar(fig, "fig03_plano_misto.png")
@@ -128,7 +130,7 @@ salvar(fig, "fig05_forca_trabalho.png")
 dcap = res.duais["capacidade"]
 valor = [(-dcap[t] if dcap[t] is not None else 0.0) for t in meses]
 fig, ax = plt.subplots(figsize=(8, 4))
-ax.bar(meses, valor, color="#54A24B")
+ax.bar(meses, valor, color=C_DESTAQUE)
 ax.set(xlabel="Mes", ylabel="R$ por unidade de capacidade",
        title="Preco-sombra da capacidade regular (economia por +1 un)")
 salvar(fig, "fig06_precos_sombra.png")
@@ -146,7 +148,7 @@ linhas.append(("demanda", (resolve_pap(D*(1-delta), "misto").custo_total/base-1)
 linhas.sort(key=lambda r: abs(r[2]-r[1]))
 fig, ax = plt.subplots(figsize=(8, 4.5))
 for i, (n, lo, hi) in enumerate(linhas):
-    ax.barh(i, hi-lo, left=min(lo, hi), color="#4C78A8")
+    ax.barh(i, hi-lo, left=min(lo, hi), color=C_REGULAR)
 ax.set_yticks(range(len(linhas))); ax.set_yticklabels([r[0] for r in linhas])
 ax.axvline(0, color="k", lw=0.8)
 ax.set(xlabel="Variacao do custo total (%) para parametro +/- 20%", title="Tornado: sensibilidade do custo otimo")
@@ -157,7 +159,7 @@ niveis = [0.80, 0.85, 0.90, 0.95, 0.975, 0.99]
 front = [(sl*100, resolve_pap(D, "misto", estoque_seguranca=norm.ppf(sl)*cv_erro*D).custo_total) for sl in niveis]
 front = pd.DataFrame(front, columns=["sl", "custo"])
 fig, ax = plt.subplots(figsize=(8, 4))
-ax.plot(front["sl"], front["custo"]/1e6, "o-")
+ax.plot(front["sl"], front["custo"]/1e6, "o-", color=C_DESTAQUE)
 ax.set(xlabel="Nivel de servico (%)", ylabel="Custo total (R$ milhoes)", title="Fronteira custo x nivel de servico")
 salvar(fig, "fig08_fronteira.png")
 print("\n== Fronteira ==")

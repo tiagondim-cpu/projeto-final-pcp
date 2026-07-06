@@ -20,8 +20,14 @@ from scipy.stats import norm
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent / "src"))
 from parametros import demanda_esperada, CUSTOS, CAPACIDADE  # noqa: E402
 from modelo import resolve_pap  # noqa: E402
+from estilo import aplicar_estilo, C_REGULAR, C_EXTRA, C_ESTOQUE, C_DESTAQUE  # noqa: E402
+
+aplicar_estilo()
 
 st.set_page_config(page_title="PCP - Planejamento Agregado", layout="wide")
+_logo = pathlib.Path(__file__).resolve().parent / "assets" / "logo_unb.png"
+if _logo.exists():
+    st.logo(str(_logo))
 st.title("Planejamento Agregado da Produção - Dashboard")
 st.caption("Fabricante de ventiladores, horizonte de 12 meses. Ajuste os parâmetros e "
            "veja a decisão ótima e os trade-offs se atualizarem.")
@@ -67,11 +73,11 @@ with col_a:
     st.markdown("**Plano misto: produção vs demanda**")
     P = np.array(misto.plano["P"]); O = np.array(misto.plano["O"]); I = np.array(misto.plano["I"])
     fig, ax1 = plt.subplots(figsize=(6, 3.4))
-    ax1.bar(meses, P, color="#4C78A8", label="Regular")
-    ax1.bar(meses, O, bottom=P, color="#F58518", label="Hora extra")
+    ax1.bar(meses, P, color=C_REGULAR, label="Regular")
+    ax1.bar(meses, O, bottom=P, color=C_EXTRA, label="Hora extra")
     ax1.plot(meses, D, "k-o", ms=3, label="Demanda")
     ax1.set_xlabel("Mês"); ax1.set_ylabel("un"); ax1.legend(fontsize=7)
-    ax2 = ax1.twinx(); ax2.plot(meses, I, "g--", label="Estoque"); ax2.set_ylabel("Estoque")
+    ax2 = ax1.twinx(); ax2.plot(meses, I, "--", color=C_ESTOQUE, label="Estoque"); ax2.set_ylabel("Estoque")
     st.pyplot(fig)
 
 # --- Fronteira custo x serviço ---
@@ -82,7 +88,7 @@ with col_b:
                              estoque_seguranca=norm.ppf(s) * cv * D).custo_total
                  for s in niveis]
     fig2, ax = plt.subplots(figsize=(6, 3.4))
-    ax.plot(niveis * 100, np.array(custos_sl) / 1e6, "o-")
+    ax.plot(niveis * 100, np.array(custos_sl) / 1e6, "o-", color=C_DESTAQUE)
     ax.axvline(sl * 100, color="r", ls=":", label=f"Escolhido: {sl:.0%}")
     ax.set_xlabel("Nível de serviço (%)"); ax.set_ylabel("Custo (R$ mi)"); ax.legend(fontsize=7)
     st.pyplot(fig2)
